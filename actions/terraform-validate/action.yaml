@@ -1,5 +1,5 @@
 name: Terraform validate
-description: Terraform validate execution
+description: Terraform validate command
 
 runs:
   using: composite
