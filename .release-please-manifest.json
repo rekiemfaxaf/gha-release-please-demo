@@ -1,4 +1,3 @@
 {
-  "actions/test-action": "1.0.0",
   "actions/terraform-validate": "1.0.0"
 }
