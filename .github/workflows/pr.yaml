@@ -1,0 +1,72 @@
+name: Pull Request Github Actions
+
+on:
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - .github/*
+
+jobs:
+  identify-changed-folders:
+    name: Identify changed folders
+    runs-on: ubuntu-latest
+    outputs:
+      folders: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Identify changed Folders
+        id: set-matrix
+        run: |
+          # Get list of all changed files between this commit and the previous one
+          # Filter for files that are inside the 'actions/' directory
+          changed_files_in_actions=$(git diff --name-only HEAD^ HEAD | grep '^actions/' || true)
+
+          if [ -z "$changed_files_in_actions" ]; then
+            echo "No files changed inside the 'actions/' folder. Nothing to process."
+            echo "matrix=[]" >> $GITHUB_OUTPUT
+          else
+            echo "Found changed files in 'actions/':"
+            echo "$changed_files_in_actions" # Optional: log the files found
+
+            # For each changed file path:
+            # 1. Get its directory path (e.g., actions/action-a/src -> actions/action-a)
+            # 2. Extract the *second* part of the path (e.g., actions/action-a -> action-a)
+            # 3. Get unique folder names and sort them
+            # 4. Remove any potential blank lines (though sort -u should handle most)
+            unique_folders=$(echo "$changed_files_in_actions" | xargs -n1 dirname | cut -d'/' -f2 | sort -u | sed '/^$/d')
+
+            echo "Unique changed action folders:"
+            echo "$unique_folders" # Optional: log the unique folders found
+
+            # Convert the list of folder names into a JSON array
+            folders_json=$(echo "$unique_folders" | jq -R -s -c 'split("\n") | map(select(length > 0) | .)')
+
+            echo "Setting matrix output: matrix=${folders_json}"
+            echo "matrix=${folders_json}" >> $GITHUB_OUTPUT
+          fi
+
+  terraform-lint:
+    name: Run Action Linters
+    runs-on: ubuntu-latest
+    needs: [identify-changed-folders]
+    if: ${{ needs.identify-changed-folders.outputs.folders != '[]' }}
+    outputs:
+      linter_status: ${{ steps.linters.outcome }}
+    strategy:
+      fail-fast: false
+      matrix:
+        folder: ${{fromJson(needs.identify-changed-folders.outputs.folders)}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate YAML file
+        run: yamllint --config-file ../../.yamllint.yaml action.yaml
+        working-directory: actions/${{ matrix.folder }}
+        continue-on-error: true

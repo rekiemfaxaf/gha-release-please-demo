@@ -1,0 +1,16 @@
+name: Create GitHub Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  create-release:
+    if: contains(github.event.head_commit.message, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: googleapis/release-please-action@v4
+        with:
+          manifest-file: .release-please-manifest.json
+          config-file: release-please-config.json
