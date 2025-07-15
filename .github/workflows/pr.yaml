@@ -7,6 +7,12 @@ on:
     paths-ignore:
       - .github/*
 
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  issues: write
+
 jobs:
   identify-changed-folders:
     name: Identify changed folders

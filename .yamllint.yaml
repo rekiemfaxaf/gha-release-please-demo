@@ -1,0 +1,88 @@
+# .yamllint.yaml - Configuration for yamllint, tailored for GitHub Actions
+
+# Inherit the default yamllint ruleset as a base
+extends: default
+
+# Define specific rules or override defaults
+rules:
+  # == Structure Rules ==
+  # Indentation: GitHub Actions examples often use 2 spaces.
+  indentation:
+    spaces: 2          # Expect 2 spaces for indentation
+    indent-sequences: true # Indent block sequences (like lists under `steps:`)
+    check-multi-line-strings: false # Be lenient with multi-line strings (like scripts in `run:`)
+
+  # Key Duplicates: Essential to catch typos or logical errors. (Default is enabled, kept for clarity)
+  key-duplicates: enable
+
+  # Key Ordering: Disable alphabetical key ordering. The order in GitHub Actions
+  # often has logical meaning (e.g., name, id, uses/run, with, env).
+  key-ordering: disable
+
+  # == Style Rules ==
+  # Line Length: Keep lines reasonably short for readability, but allow longer lines
+  # as sometimes needed for commands or complex expressions. Set as warning.
+  line-length:
+    max: 158           # Maximum line length
+    level: warning     # Report as a warning, not an error
+
+  # Trailing Spaces: Keep code clean. (Default is enabled)
+  trailing-spaces: enable
+
+  # Truthy Values: Enforce standard `true`/`false`. GitHub Actions expects these.
+  # Avoid using 'yes', 'no', 'on', 'off', etc.
+  truthy:
+    level: error       # Fail if non-standard booleans are used
+
+  # Braces/Brackets Spacing: Use default sensible spacing.
+  # Example: ${{ secrets.MY_SECRET }} vs ${{secrets.MY_SECRET}}
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1 
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 0
+
+  # == Readability Rules ==
+  # Comments: Ensure comments start correctly.
+  comments:
+    require-starting-space: true
+    level: warning     # Often stylistic, so warning is fine
+
+  # Comment Indentation: Sometimes comments are intentionally offset. Be lenient.
+  comments-indentation: disable # Or set level: warning
+
+  # Empty Lines: Standard rules for empty lines usually suffice.
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
+
+  # == Other ==
+  # Document Start/End: Not strictly necessary for GitHub Actions files unless
+  # concatenating multiple documents, but doesn't hurt.
+  document-start: disable # `---` at the start
+  document-end: disable   # `...` at the end
+
+  # New Line at End of File: Good practice for POSIX compatibility. (Default is enabled)
+  new-line-at-end-of-file: enable
+
+  # Octal Values: Forbid octal values like `0755` unless explicitly marked with `0o`,
+  # as they can be confusing or unintentional in YAML. Important for file modes etc.
+  # Might cause issues if scripts *rely* on implicit octal interpretation by YAML parser.
+  octal-values:
+    forbid-implicit-octal: true
+    forbid-explicit-octal: false # Allow `0o755` if needed
+    level: warning
+
+# Specify which files this configuration applies to (optional, yamllint usually finds them)
+# By default, yamllint searches for *.yaml and *.yml
+# yaml-files:
+#   - '.github/workflows/*.yml'
+#   - '.github/workflows/*.yaml'
+
+# Ignore specific files or directories if needed
+ignore: |
+  /node_modules/
+  /vendor/
+  *.template.yml

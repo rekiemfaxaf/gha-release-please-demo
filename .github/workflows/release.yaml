@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+  pull-requests: write
+  packages: write
+  issues: write
+
 jobs:
   create-release:
     if: contains(github.event.head_commit.message, 'release')
