@@ -1,0 +1,9 @@
+{
+  "packages": {
+    "actions/terraform-validate": {
+      "component": "terraform-validate",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "simple"
+    }
+  }
+}
