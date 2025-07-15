@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/rekiemfaxaf/gha-release-please-demo/compare/terraform-validate-v1.0.0...terraform-validate-v1.0.1) (2025-07-15)
+
+
+### Bug Fixes
+
+* update action description ([#4](https://github.com/rekiemfaxaf/gha-release-please-demo/issues/4)) ([02c85e5](https://github.com/rekiemfaxaf/gha-release-please-demo/commit/02c85e538db8c799770818bc011759917752c777))
+
 ## 1.0.0 (2025-07-15)
 
 
