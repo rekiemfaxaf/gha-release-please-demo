@@ -1,3 +1,4 @@
 {
-  "actions/terraform-validate": "1.0.1"
+  "actions/terraform-validate": "1.0.1",
+  "actions/terraform-check-format": "1.0.0"
 }
