@@ -1,4 +1,4 @@
-name: Check Terraform format 
+name: Check Terraform format
 description: Check Terraform format
 
 runs:
