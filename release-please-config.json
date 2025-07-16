@@ -4,6 +4,11 @@
       "component": "terraform-validate",
       "changelog-path": "CHANGELOG.md",
       "release-type": "simple"
+    },
+    "actions/terraform-check-format": {
+      "component": "terraform-check-format",
+      "changelog-path": "CHANGELOG.md",
+      "release-type": "simple"
     }
   }
 }
