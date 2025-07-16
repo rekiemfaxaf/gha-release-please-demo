@@ -1,0 +1,17 @@
+name: Check Terraform format
+description: Check Terraform format
+
+runs:
+  using: composite
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install Terraform
+      uses: hashicorp/setup-terraform@v3
+      with:
+        terraform_version: "^1.10.0"
+
+    - name: Check formatting
+      shell: bash
+      run: terraform fmt -check -recursive
